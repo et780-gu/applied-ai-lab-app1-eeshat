@@ -1,0 +1,6 @@
+{
+  "name": "Sales Regional Intelligence",
+  "description": "Upload sales orders CSV, visualize quarterly revenue by region with charts and tables, and generate verified 3-sentence AI summaries of Q2 to Q3 shifts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

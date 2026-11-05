@@ -14,15 +14,17 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: '10mb' }));
 
-// Shared Gemini Client
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
+// Helper to instantiate Gemini client when key is present
+const getAiClient = () => {
+  return new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY || '',
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      },
     },
-  },
-});
+  });
+};
 
 export interface RegionQuarterDriver {
   topRegion: {
@@ -165,6 +167,7 @@ CRITICAL RULES:
       setTimeout(() => reject(new Error('Gemini API call timed out')), 8000)
     );
 
+    const ai = getAiClient();
     const generatePromise = ai.models.generateContent({
       model: 'gemini-3.8-flash',
       contents: `Based on the following calculated data, generate the strict three-sentence summary:\n\n${promptContext}`,
@@ -239,8 +242,9 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, () => {
-    console.log(`Sales Regional Intelligence server listening on port ${PORT}`);
+  const port = Number(PORT) || 3000;
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`Sales Regional Intelligence server listening on port ${port} at 0.0.0.0`);
   });
 }
 
